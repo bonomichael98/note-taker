@@ -32,7 +32,9 @@ module.exports = (app) => {
                 res.status(500).send();
             } else {
                 let notes = JSON.parse(data);
+
                 notes.push(req.body);
+
                 fs.writeFile(
                     './db/db.json',
                     JSON.stringify(notes),
@@ -49,8 +51,8 @@ module.exports = (app) => {
         });
     });
 
-    app.delete('/api/notes', function (req, res) {
-        fs.readFile('./db/db.json', 'utf8', (err, data) => {
+    app.delete('/api/notes/:id', function (req, res) {
+        fs.writeFile('./db/db.json', 'utf8', (err, data) => {
             if (err) {
                 console.error(err);
 
@@ -58,11 +60,7 @@ module.exports = (app) => {
             } else {
                 let notes = JSON.parse(data);
 
-                notes.forEach((note, index) => {
-                    note.id = index;
-
-                });
-                res.json(notes)
+                notes.splice(data.id);
             }
         })
     });
